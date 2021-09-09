@@ -88,3 +88,44 @@ exports.update = (req, res) => {{
             })
         })
 }}
+
+exports.deleteOne = (req, res) => {
+    const id = req.params.id;
+
+    Ledger.destroy({
+        where: { id: id },
+    })
+        .then(num => {
+            if (num == 1) {
+                res.send({
+                    message: "Ledger was deleted successfully!",
+                });
+            } else {
+                res.send({
+                    message: `Cannot delete Ledger whit id=${id}.`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: `error destroying Ledger with id=${id}`
+            });
+        });
+}
+
+exports.deleteAll = (req, res) => {
+    Ledger.distroy({
+        where: null,
+        truncate: false,
+    })
+        .then(nums => {
+            res.send({
+                message: `${nums} Ledgers were deleted successfully!`,
+            });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "error occurred while delete all Ledgers"
+            });
+        });
+}
