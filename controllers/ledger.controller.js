@@ -46,7 +46,7 @@ exports.findAll = (req, res) => {
         });
 }
 
-exports.findUserLedger = (req, res) => {
+exports.findLedger = (req, res) => {
     const userId = req.params.userId;
 
     Ledger.findAll({
@@ -63,6 +63,28 @@ exports.findUserLedger = (req, res) => {
                     err.message || "error occurred while retrieving ledgers.",
             })
         })
+}
+
+exports.findDateLedger = (req, res) => {
+    const userId = req.params.userId;
+    const date = req.params.date;
+
+    Ledger.findAll({
+        include: [{ model: User, as: "user", attributes: ["id", "uid"] }],
+        where: { 
+            userId: userId,
+            date: date,
+        },
+        attributes: { exclude: ["userId"] }
+    })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "error occurred while retrieving ledgers.",
+            });
+        });
 }
 
 exports.update = (req, res) => {{

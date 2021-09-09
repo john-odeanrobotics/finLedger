@@ -6,10 +6,11 @@ module.exports = app => {
 
     router.post("/ledgers", ledgers.create);
     router.get("/ledgers", ledgers.findAll);
-    router.get("/ledgers/:userId", ledgers.findUserLedger);
-    router.post("/ledgers/update/:id", ledgers.update)
-    router.post("/ledgers/delete/:id", ledgers.deleteOne)
-    router.post("/ledgers/delete/all", ledgers.deleteAll)
+    router.get("/ledgers/:userId", ledgers.findLedger);
+    router.get("/ledgers/:userId/:date", ledgers.findDateLedger);
+    router.post("/ledgers/update/:id", ledgers.update);
+    router.post("/ledgers/delete/:id", ledgers.deleteOne);
+    router.post("/ledgers/delete/all", ledgers.deleteAll);
     router.post("/users", users.create);
 
     app.use("/api", router);
