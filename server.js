@@ -20,7 +20,8 @@ app.get("/", (req, res) => {
     });
 });
 
-require("./routes/ledger.routes.js")(app)
+require("./routes/ledger.routes.js")(app);
+require("./routes/user.routes.js")(app);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

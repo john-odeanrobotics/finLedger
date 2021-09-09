@@ -8,9 +8,6 @@ module.exports = (sequelize, Sequelize) => {
         },
         amount: {
             type: Sequelize.INTEGER
-        },
-        positive: {
-            type: Sequelize.BOOLEAN
         }
     });
 

@@ -1,28 +1,22 @@
+const { Op } = require("sequelize")
 const db = require("../models");
 const Ledger = db.ledger;
 const User = db.user;
 
 exports.create = (req, res) => {
-    if (!req.body.date || !req.body.userId || !req.body.amount || !req.body.positive) {
+    if (!req.body.date || !req.body.userId || !req.body.amount) {
         res.status(400).send({
             message: "Contents is empty."
         });
         return;
     };
 
-    if (req.body.amount <= 0) {
-        res.status(400).send({
-            message: "Please enter a positive number."
-        });
-        return;
-    }
 
-
+    console.log(req.body)
     const ledger = {
         date: req.body.date,
         description: req.body.description,
         amount: req.body.amount,
-        positive: req.body.positive,
         userId: req.body.userId,
     }
 
@@ -96,13 +90,13 @@ exports.findDateLedger = (req, res) => {
 }
 
 exports.findIncome = (req, res) => {
-    const id = req.params.id;
+    const userId = req.params.userId;
 
     Ledger.findAll({
         include: [{ model: User, as: "user", attributes: ["id", "uid"] }],
         where: { 
             userId: userId,
-            positive: true,
+            amount: {[Op.gt]: 0}
         },
         attributes: { exclude: ["userId"] }
     })
@@ -117,13 +111,13 @@ exports.findIncome = (req, res) => {
 }
 
 exports.findExpense = (req, res) => {
-    const id = req.params.id;
+    const userId = req.params.userId;
 
     Ledger.findAll({
         include: [{ model: User, as: "user", attributes: ["id", "uid"] }],
         where: { 
             userId: userId,
-            positive: false,
+            amount: {[Op.lt]: 0}
         },
         attributes: { exclude: ["userId"] }
     })
@@ -135,6 +129,7 @@ exports.findExpense = (req, res) => {
                 message: err.message || "error occurred while retrieving ledgers.",
             });
         });
+    
 }
 
 exports.update = (req, res) => {{
@@ -147,21 +142,21 @@ exports.update = (req, res) => {{
             if (num == 1) {
                 res.send({
                     message: "Ledger was updated successfully.",
-                })
+                });
             } else {
                 res.send({
                     message: `Cannot update Ledger whit id=${id}.`
-                })
+                });
             }
         })
         .catch(err => {
             res.status(500).send({
                 message: `error updating Ledger with id=${id}`
-            })
-        })
+            });
+        });
 }}
 
-exports.deleteOne = (req, res) => {
+exports.delete = (req, res) => {
     const id = req.params.id;
 
     Ledger.destroy({
@@ -181,23 +176,6 @@ exports.deleteOne = (req, res) => {
         .catch(err => {
             res.status(500).send({
                 message: `error destroying Ledger with id=${id}`
-            });
-        });
-}
-
-exports.deleteAll = (req, res) => {
-    Ledger.distroy({
-        where: null,
-        truncate: false,
-    })
-        .then(nums => {
-            res.send({
-                message: `${nums} Ledgers were deleted successfully!`,
-            });
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "error occurred while delete all Ledgers"
             });
         });
 }

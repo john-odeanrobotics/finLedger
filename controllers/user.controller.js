@@ -14,6 +14,8 @@ exports.create = (req, res) => {
         password: req.body.password,
     }
 
+    console.log(req.body)
+
     User.create(user)
         .then(data => {
             res.send(data);

@@ -1,19 +1,16 @@
 module.exports = app => {
     const ledgers = require("../controllers/ledger.controller.js");
-    const users = require("../controllers/user.controller.js");
 
     const router = require("express").Router();
 
-    router.post("/ledgers", ledgers.create);
-    router.get("/ledgers", ledgers.findAll);
-    router.get("/ledgers/:userId", ledgers.findLedger);
-    router.get("/ledgers/:userId/:date", ledgers.findDateLedger);
-    router.get("/ledgers/:userId/inc", ledgers.findIncome);
-    router.get("/ledgers/:userId/exp", ledgers.findExpense);
-    router.post("/ledgers/update/:id", ledgers.update);
-    router.post("/ledgers/delete/:id", ledgers.deleteOne);
-    router.post("/ledgers/delete/all", ledgers.deleteAll);
-    router.post("/users", users.create);
+    router.post("/", ledgers.create);
+    router.get("/", ledgers.findAll);
+    router.get("/inc/:userId", ledgers.findIncome);
+    router.get("/exp/:userId", ledgers.findExpense);
+    router.post("/update/:id", ledgers.update);
+    router.post("/delete/:id", ledgers.delete);
+    router.get("/:userId", ledgers.findLedger);
+    router.get("/:userId/:date", ledgers.findDateLedger);
 
-    app.use("/api", router);
+    app.use("/api/ledger", router);
 }
