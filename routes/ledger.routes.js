@@ -8,6 +8,8 @@ module.exports = app => {
     router.get("/ledgers", ledgers.findAll);
     router.get("/ledgers/:userId", ledgers.findLedger);
     router.get("/ledgers/:userId/:date", ledgers.findDateLedger);
+    router.get("/ledgers/:userId/inc", ledgers.findIncome);
+    router.get("/ledgers/:userId/exp", ledgers.findExpense);
     router.post("/ledgers/update/:id", ledgers.update);
     router.post("/ledgers/delete/:id", ledgers.deleteOne);
     router.post("/ledgers/delete/all", ledgers.deleteAll);

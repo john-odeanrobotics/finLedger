@@ -3,12 +3,20 @@ const Ledger = db.ledger;
 const User = db.user;
 
 exports.create = (req, res) => {
-    if (!req.body.date || !req.body.userId) {
+    if (!req.body.date || !req.body.userId || !req.body.amount || !req.body.positive) {
         res.status(400).send({
             message: "Contents is empty."
         });
         return;
     };
+
+    if (req.body.amount <= 0) {
+        res.status(400).send({
+            message: "Please enter a positive number."
+        });
+        return;
+    }
+
 
     const ledger = {
         date: req.body.date,
@@ -74,6 +82,48 @@ exports.findDateLedger = (req, res) => {
         where: { 
             userId: userId,
             date: date,
+        },
+        attributes: { exclude: ["userId"] }
+    })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "error occurred while retrieving ledgers.",
+            });
+        });
+}
+
+exports.findIncome = (req, res) => {
+    const id = req.params.id;
+
+    Ledger.findAll({
+        include: [{ model: User, as: "user", attributes: ["id", "uid"] }],
+        where: { 
+            userId: userId,
+            positive: true,
+        },
+        attributes: { exclude: ["userId"] }
+    })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "error occurred while retrieving ledgers.",
+            });
+        });
+}
+
+exports.findExpense = (req, res) => {
+    const id = req.params.id;
+
+    Ledger.findAll({
+        include: [{ model: User, as: "user", attributes: ["id", "uid"] }],
+        where: { 
+            userId: userId,
+            positive: false,
         },
         attributes: { exclude: ["userId"] }
     })
