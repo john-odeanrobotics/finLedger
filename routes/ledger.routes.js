@@ -5,8 +5,6 @@ module.exports = app => {
 
     router.post("/", ledgers.create);
     router.get("/", ledgers.findAll);
-    router.get("/inc/:userId", ledgers.findIncome);
-    router.get("/exp/:userId", ledgers.findExpense);
     router.post("/update/:id", ledgers.update);
     router.post("/delete/:id", ledgers.delete);
     router.get("/:userId", ledgers.findLedger);

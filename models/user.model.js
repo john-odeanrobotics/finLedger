@@ -9,7 +9,10 @@ module.exports = (sequelize, Sequelize) => {
     });
     
     User.associate = function (models) {
-        User.hasMany(models.ledger);
+        User.hasMany(models.ledger, {
+            foreignKey: "userId",
+            sourceKey: "id"
+        });
     }
     return User;
 }

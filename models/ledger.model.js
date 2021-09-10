@@ -8,12 +8,16 @@ module.exports = (sequelize, Sequelize) => {
         },
         amount: {
             type: Sequelize.INTEGER
+        },
+        isIncome: {
+            type: Sequelize.BOOLEAN
         }
     });
 
     Ledger.associate = function (models){
         Ledger.belongsTo(models.user, {
-            foreignKey: "id",
+            foreignKey: "userId",
+            targetKey: "id"
         });
     }
     return Ledger;

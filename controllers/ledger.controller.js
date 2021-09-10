@@ -4,7 +4,7 @@ const Ledger = db.ledger;
 const User = db.user;
 
 exports.create = (req, res) => {
-    if (!req.body.date || !req.body.userId || !req.body.amount) {
+    if (!req.body.date || !req.body.userId || !req.body.amount || req.body.isIncome === null ) {
         res.status(400).send({
             message: "Contents is empty."
         });
@@ -17,6 +17,7 @@ exports.create = (req, res) => {
         date: req.body.date,
         description: req.body.description,
         amount: req.body.amount,
+        isIncome: req.body.isIncome,
         userId: req.body.userId,
     }
 
@@ -35,7 +36,7 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     Ledger.findAll({
         include: [{ model: User, as: "user", attributes: ["id", "uid"] }],
-        attributes: { exclude: ["userId"] }
+        attributes: { exclude: ["userId", "createdAt", "updatedAt"] }
     })
         .then(data => {
             res.send(data);
@@ -54,7 +55,7 @@ exports.findLedger = (req, res) => {
     Ledger.findAll({
         include: [{ model: User, as: "user", attributes: ["id", "uid"] }],
         where: { userId: userId },
-        attributes: { exclude: ["userId"] }
+        // attributes: { exclude: ["userId"] }
     })
         .then(data => {
             res.send(data);
@@ -87,49 +88,6 @@ exports.findDateLedger = (req, res) => {
                 message: err.message || "error occurred while retrieving ledgers.",
             });
         });
-}
-
-exports.findIncome = (req, res) => {
-    const userId = req.params.userId;
-
-    Ledger.findAll({
-        include: [{ model: User, as: "user", attributes: ["id", "uid"] }],
-        where: { 
-            userId: userId,
-            amount: {[Op.gt]: 0}
-        },
-        attributes: { exclude: ["userId"] }
-    })
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "error occurred while retrieving ledgers.",
-            });
-        });
-}
-
-exports.findExpense = (req, res) => {
-    const userId = req.params.userId;
-
-    Ledger.findAll({
-        include: [{ model: User, as: "user", attributes: ["id", "uid"] }],
-        where: { 
-            userId: userId,
-            amount: {[Op.lt]: 0}
-        },
-        attributes: { exclude: ["userId"] }
-    })
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "error occurred while retrieving ledgers.",
-            });
-        });
-    
 }
 
 exports.update = (req, res) => {{
