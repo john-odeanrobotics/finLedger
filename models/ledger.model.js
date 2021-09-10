@@ -3,7 +3,10 @@ module.exports = (sequelize, Sequelize) => {
         date: {
             type: Sequelize.DATEONLY
         },
-        description: {
+        tag: {
+            type: Sequelize.STRING
+        },
+        memo: {
             type: Sequelize.STRING
         },
         amount: {

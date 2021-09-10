@@ -15,7 +15,8 @@ exports.create = (req, res) => {
     console.log(req.body)
     const ledger = {
         date: req.body.date,
-        description: req.body.description,
+        tag: req.body.tag,
+        memo: req.body.memo,
         amount: req.body.amount,
         isIncome: req.body.isIncome,
         userId: req.body.userId,
@@ -36,6 +37,10 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     Ledger.findAll({
         include: [{ model: User, as: "user", attributes: ["id", "uid"] }],
+        order: [
+            ["date", "desc"],
+            ["id", "desc"]
+        ],
         attributes: { exclude: ["userId", "createdAt", "updatedAt"] }
     })
         .then(data => {
@@ -55,7 +60,11 @@ exports.findLedger = (req, res) => {
     Ledger.findAll({
         include: [{ model: User, as: "user", attributes: ["id", "uid"] }],
         where: { userId: userId },
-        // attributes: { exclude: ["userId"] }
+        order: [
+            ["date", "desc"],
+            ["id", "desc"]
+        ],
+        attributes: { exclude: ["userId", "createdAt", "updatedAt"] }
     })
         .then(data => {
             res.send(data);
@@ -78,7 +87,11 @@ exports.findDateLedger = (req, res) => {
             userId: userId,
             date: date,
         },
-        attributes: { exclude: ["userId"] }
+        order: [
+            ["date", "desc"],
+            ["id", "desc"]
+        ],
+        attributes: { exclude: ["userId", "createdAt", "updatedAt"] }
     })
         .then(data => {
             res.send(data);
