@@ -104,7 +104,9 @@ exports.delete = (req, res) => {
 }
 
 exports.deleteAll = (req, res) => {
-    User.destroy()
+    User.destroy({
+        where: null
+    })
         .then(num => {
             if (num == 1) {
                 res.send({
@@ -112,13 +114,13 @@ exports.deleteAll = (req, res) => {
                 });
             } else {
                 res.send({
-                    message: `Cannot delete User whit id=${id}.`
+                    message: `Cannot delete Users.`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: `error destroying User with id=${id}`
+                message: `error destroying Users`
             });
         });
 }
