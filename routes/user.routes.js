@@ -7,6 +7,7 @@ module.exports = app => {
     router.get("/", users.findAll);
     router.post("/update/:id", users.update);
     router.post("/delete/:id", users.delete);
+    router.post("/deleteAll", users.deleteAll);
 
     app.use("/api/user", router);
 }

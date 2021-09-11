@@ -4,12 +4,19 @@ const Ledger = db.ledger;
 const User = db.user;
 
 exports.create = (req, res) => {
-    if (!req.body.date || !req.body.userId || !req.body.amount || req.body.isIncome === null ) {
+    if (!req.body.date || !req.body.tag || !req.body.memo || !req.body.amount || req.body.isIncome === null || !req.body.userId) {
         res.status(400).send({
             message: "Contents is empty."
         });
         return;
-    };
+    };  
+    if (req.body.amount === 0 || typeof(req.body.amount) !== "number") {
+        res.status(400).send({
+            message: "Enter only numbers except zero for the amount."
+        });
+        return;
+        
+    }
 
 
     console.log(req.body)
@@ -141,6 +148,30 @@ exports.delete = (req, res) => {
             } else {
                 res.send({
                     message: `Cannot delete Ledger whit id=${id}.`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: `error destroying Ledger with id=${id}`
+            });
+        });
+}
+
+exports.deleteAll = (req, res) => {
+    const userId = req.params.userId;
+
+    Ledger.destroy({
+        where: { userId: userId },
+    })
+        .then(num => {
+            if (num == 1) {
+                res.send({
+                    message: "Ledger was deleted successfully!",
+                });
+            } else {
+                res.send({
+                    message: `Cannot delete Ledger whit id=${userId}.`
                 });
             }
         })

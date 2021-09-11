@@ -8,6 +8,18 @@ exports.create = (req, res) => {
         });
         return;
     };
+    if (req.body.uid.length < 4 || req.body.uid.length > 20) {
+        res.status(400).send({
+            message: "Please write ID in 4 to 20 letters."
+        });
+        return;
+    }
+    if (req.body.password.length < 4 || req.body.password.length > 20) {
+        res.status(400).send({
+            message: "Please enter Password in 4 to 20 letters."
+        });
+        return;
+    }
 
     const user = {
         uid: req.body.uid,
@@ -73,6 +85,26 @@ exports.delete = (req, res) => {
     User.destroy({
         where: { id: id },
     })
+        .then(num => {
+            if (num == 1) {
+                res.send({
+                    message: "User was deleted successfully!",
+                });
+            } else {
+                res.send({
+                    message: `Cannot delete User whit id=${id}.`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: `error destroying User with id=${id}`
+            });
+        });
+}
+
+exports.deleteAll = (req, res) => {
+    User.destroy()
         .then(num => {
             if (num == 1) {
                 res.send({
