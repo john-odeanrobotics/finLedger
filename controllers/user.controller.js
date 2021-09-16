@@ -1,4 +1,5 @@
 const db = require("../models");
+const { Op } = require("sequelize");
 const User = db.user;
 
 exports.create = (req, res) => {
@@ -123,4 +124,28 @@ exports.deleteAll = (req, res) => {
                 message: `error destroying Users`
             });
         });
+}
+
+exports.signIn = (req, res) => {
+    const uid = req.body.uid;
+    const password = req.body.password;
+    console.log(req.body)
+    User.findOne({ 
+        where: {
+            [Op.and]: [
+                { uid: uid },
+                { password: password }
+            ]
+        },
+        attributes: { exclude: ["password", "createdAt", "updatedAt"] }
+    })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err
+            });
+        });
+
 }

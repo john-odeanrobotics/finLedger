@@ -5,6 +5,7 @@ module.exports = app => {
 
     router.post("/", users.create);
     router.get("/", users.findAll);
+    router.post("/signin", users.signIn)
     router.post("/update/:id", users.update);
     router.post("/delete/:id", users.delete);
     router.post("/deleteAll", users.deleteAll);
