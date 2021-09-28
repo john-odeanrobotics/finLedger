@@ -28,6 +28,13 @@ exports.create = (req, res) => {
         userId: req.body.userId,
     }
 
+    if (typeof ledger.amount === "string") {
+        ledger.amount = parseInt(ledger.amount, 10);
+    }
+    if (typeof ledger.userId === "string") {
+        ledger.userId = parseInt(ledger.userId, 10);
+    }
+
     Ledger.create(ledger)
         .then(data => {
             res.send(data);
@@ -112,7 +119,23 @@ exports.findDateLedger = (req, res) => {
 exports.update = (req, res) => {{
     const id = req.params.id;
 
-    Ledger.update(req.body, {
+    const ledger = {
+        date: req.body.date,
+        tag: req.body.tag,
+        memo: req.body.memo,
+        amount: req.body.amount,
+        isIncome: req.body.isIncome,
+        userId: req.body.userId,
+    }
+    
+    if (typeof ledger.amount === "string") {
+        ledger.amount = parseInt(ledger.amount, 10);
+    }
+    if (typeof ledger.userId === "string") {
+        ledger.userId = parseInt(ledger.userId, 10);
+    }
+
+    Ledger.update(ledger, {
         where: { id: id },
     })
         .then(num => {

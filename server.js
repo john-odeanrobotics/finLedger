@@ -6,8 +6,15 @@ const app = express();
 const db = require("./models");
 db.sequelize.sync();
 
-var corOptions = {
-    origin: "http://localhost:8081",
+const whiteList = ["http://10.10.90.170:8081", "http://localhost:8081"];
+const corOptions = {
+    origin: function (origin, callback) {
+        if (whiteList.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    }
 };
 
 app.use(cors(corOptions));
