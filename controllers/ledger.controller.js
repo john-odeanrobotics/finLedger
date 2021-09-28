@@ -23,16 +23,9 @@ exports.create = (req, res) => {
         date: req.body.date,
         tag: req.body.tag,
         memo: req.body.memo,
-        amount: req.body.amount,
+        amount: parseInt(req.body.amount, 10),
         isIncome: req.body.isIncome,
-        userId: req.body.userId,
-    }
-
-    if (typeof ledger.amount === "string") {
-        ledger.amount = parseInt(ledger.amount, 10);
-    }
-    if (typeof ledger.userId === "string") {
-        ledger.userId = parseInt(ledger.userId, 10);
+        userId: parseInt(req.body.userId, 10),
     }
 
     Ledger.create(ledger)
